@@ -5,6 +5,6 @@ scheduler:
   interval: 5
 eventstores:
   chat:
-    url: http://localhost:8090/stream/chats
+    url: http://storage:8090/stream/chats
   donation:
-    url: http://localhost:8090/stream/donations
+    url: http://storage:8090/stream/donations
