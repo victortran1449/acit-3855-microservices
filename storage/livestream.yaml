@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  description: Simple API for live stream chats and donations
+  version: "1.0.0"
+  title: Livestream API
+  contact:
+    email: vtran57@my.bcit.ca
+paths:
+  /stream/chats:
+    get:
+      tags:
+        - viewer_interactions
+      summary: gets chats
+      operationId: app.get_chats
+      description: Gets chats added after a timestamp
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of chats returned
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          description: Limits the number of chats returned
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        "200":
+          description: Successfully returned a list of chat events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Chat"
+  /stream/donations:
+    get:
+      tags:
+        - viewer_interactions
+      summary: gets donations
+      operationId: app.get_donations
+      description: Gets donations added after a timestamp
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of donations returned
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          description: Limits the number of donations returned
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        "200":
+          description: Successfully returned a list of donation events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Donation"
+components:
+  schemas:
+    Chat:
+      type: object
+      required:
+        - stream_id
+        - user_id
+        - message
+        - reaction_count
+        - timestamp
+        - trace_id
+      properties:
+        stream_id:
+          type: string
+          description: The ID of the stream where the chat was sent
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        user_id:
+          type: string
+          description: The ID of the viewer that sent the chat
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        message:
+          type: string
+          description: Chat message
+          example: Hello chat!
+        reaction_count:
+          type: integer
+          description: Number of reactions this chat has received
+          example: 10
+        timestamp:
+          type: string
+          description: Timestamp when chat was sent
+          format: date-time
+          example: "2016-08-29T09:12:33.001Z"
+        trace_id:
+          type: string
+          description: The trace ID of the chat
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+    Donation:
+      type: object
+      required:
+        - stream_id
+        - user_id
+        - amount
+        - currency
+        - message
+        - timestamp
+        - trace_id
+      properties:
+        stream_id:
+          type: string
+          description: The ID of the stream where the chat was sent
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        user_id:
+          type: string
+          description: The ID of the viewer that sent the chat
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        amount:
+          type: number
+          description: Donation amount
+          format: float
+          example: 9.99
+        currency:
+          type: string
+          description: Donation currency
+          example: CAD
+        message:
+          type: string
+          description: Donation message
+          example: Nice stream!
+        timestamp:
+          type: string
+          description: Timestamp when donation was sent
+          format: date-time
+          example: "2016-08-29T09:12:33.001Z"
+        trace_id:
+          type: string
+          description: The trace ID of the donation
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851

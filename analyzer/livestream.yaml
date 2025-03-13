@@ -1,0 +1,176 @@
+openapi: 3.0.0
+info:
+  description: API for retrieving events from Kafka message queue
+  version: "1.0.0"
+  title: Livestream API
+  contact:
+    email: vtran57@my.bcit.ca
+paths:
+  /stream/chats:
+    get:
+      summary: get chat
+      operationId: app.get_chat
+      description: gets a chat event from queue
+      parameters:
+        - name: index
+          in: query
+          description: index of chat event to retrieve
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Successfully retrieved chat event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chat"
+        "404":
+          description: Chat event does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /stream/donations:
+    get:
+      summary: get donation
+      operationId: app.get_donation
+      description: gets a donation event from queue
+      parameters:
+        - name: index
+          in: query
+          description: index of the donation event to retrieve
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Successfully retrieved a donation event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Donation"
+        "404":
+          description: Donation event does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /stats:
+    get:
+      summary: Get stats
+      operationId: app.get_event_stats
+      description: Get event stats from queue
+      responses:
+        "200":
+          description: Successfully returned stats
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Stats"
+
+components:
+  schemas:
+    Chat:
+      type: object
+      required:
+        - stream_id
+        - user_id
+        - message
+        - reaction_count
+        - timestamp
+        - trace_id
+      properties:
+        stream_id:
+          type: string
+          description: The ID of the stream where the chat was sent
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        user_id:
+          type: string
+          description: The ID of the viewer that sent the chat
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        message:
+          type: string
+          description: Chat message
+          example: Hello chat!
+        reaction_count:
+          type: integer
+          description: Number of reactions this chat has received
+          example: 10
+        timestamp:
+          type: string
+          description: Timestamp when chat was sent
+          format: date-time
+          example: "2016-08-29T09:12:33.001Z"
+        trace_id:
+          type: string
+          description: The trace ID of the chat
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+    Donation:
+      type: object
+      required:
+        - stream_id
+        - user_id
+        - amount
+        - currency
+        - message
+        - timestamp
+        - trace_id
+      properties:
+        stream_id:
+          type: string
+          description: The ID of the stream where the chat was sent
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        user_id:
+          type: string
+          description: The ID of the viewer that sent the chat
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        amount:
+          type: number
+          description: Donation amount
+          format: float
+          example: 9.99
+        currency:
+          type: string
+          description: Donation currency
+          example: CAD
+        message:
+          type: string
+          description: Donation message
+          example: Nice stream!
+        timestamp:
+          type: string
+          description: Timestamp when donation was sent
+          format: date-time
+          example: "2016-08-29T09:12:33.001Z"
+        trace_id:
+          type: string
+          description: The trace ID of the donation
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+    Stats:
+      required:
+        - num_chats
+        - num_donations
+      properties:
+        num_chats:
+          type: integer
+          example: 50000
+        num_donations:
+          type: integer
+          example: 30000
+      type: object

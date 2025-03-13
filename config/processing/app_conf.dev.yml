@@ -1,0 +1,10 @@
+version: 1
+datastore:
+  filename: data/processing.json
+scheduler:
+  interval: 5
+eventstores:
+  chat:
+    url: http://localhost:8090/stream/chats
+  donation:
+    url: http://localhost:8090/stream/donations

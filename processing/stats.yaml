@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  description: This API provides user interaction event stats
+  version: "1.0.0"
+  title: Stats API
+  contact:
+    email: vtran57@bcit.ca
+paths:
+  /stats:
+    get:
+      summary: Gets the event stats
+      operationId: app.get_stats
+      description: Gets Chat and Donation processsed statistics
+      responses:
+        "200":
+          description: Successfully returned processed stats
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/InteractionStats"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    InteractionStats:
+      required:
+        - num_chats
+        - total_chat_reactions
+        - num_donations
+        - total_donations
+      properties:
+        num_chats:
+          type: integer
+          example: 50000
+        total_chat_reactions:
+          type: integer
+          example: 500000
+        num_donations:
+          type: integer
+          example: 30000
+        total_donations:
+          type: number
+          format: float
+          example: 9.99
+      type: object
