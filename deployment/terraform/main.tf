@@ -86,12 +86,28 @@ resource "aws_vpc_security_group_ingress_rule" "web-ssh" {
   to_port     = 22
 }
 
-resource "aws_vpc_security_group_ingress_rule" "web-http" {
+resource "aws_vpc_security_group_ingress_rule" "receiver" {
   security_group_id = aws_security_group.web.id
   cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 80
+  from_port         = 8080
   ip_protocol       = "tcp"
-  to_port           = 80
+  to_port           = 8080
+}
+
+resource "aws_vpc_security_group_ingress_rule" "processing" {
+  security_group_id = aws_security_group.web.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 8100
+  ip_protocol       = "tcp"
+  to_port           = 8100
+}
+
+resource "aws_vpc_security_group_ingress_rule" "analyzer" {
+  security_group_id = aws_security_group.web.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 8110
+  ip_protocol       = "tcp"
+  to_port           = 8110
 }
 
 resource "aws_vpc_security_group_egress_rule" "web-egress" {

@@ -14,8 +14,7 @@ deployment/terraform/terraform.tfvars
 deployment/terraform/terraform.tfvars.json
 
 # ansible
-deployment/ansible/inventory/
-deployment/ansible/ansible.cfg
+deployment/ansible/files/
 
 deployment/scripts/key_data
 .env

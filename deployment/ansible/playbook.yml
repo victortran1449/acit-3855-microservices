@@ -1,17 +1,137 @@
-- name: Deploy microservices
+- name: Install docker
   hosts: all
   become: true
   tasks:
-    # - name: Update repo
-    #   ansible.builtin.git:
-    #     key_file: /home/ubuntu/.ssh/git-key
-    #     repo: 'git@github.com:victortran1449/acit-3855-microservices.git'
-    #     dest: /home/ubuntu/acit-3855-microservices/
-    #     version: main
-    #     accept_hostkey: yes
-    #     update: yes
-    # - name: Start services
-    #   community.docker.docker_compose_v2:
-    #     project_src: /home/ubuntu/acit-3855-microservices/
-    #     files:
-    #     - docker-compose.yml
+    - name: install dependencies
+      apt:
+        pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg-agent
+        - software-properties-common
+        state: present
+        update_cache: yes
+    - name: add GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: add docker repository to apt
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu noble stable
+        state: present
+    - name: install docker
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+        update_cache: yes
+    - name: check docker is active
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    - name: Ensure group "docker" exists
+      ansible.builtin.group:
+        name: docker
+        state: present
+    - name: adding ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+- name: Setup github
+  hosts: all
+  tasks:
+    - name: Upload private key
+      copy:
+        src: "./files/git-key"
+        dest: "/home/ubuntu/.ssh/git-key"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'
+    - name: Pull repo
+      ansible.builtin.git:
+        key_file: /home/ubuntu/.ssh/git-key
+        repo: 'git@github.com:victortran1449/acit-3855-microservices.git'
+        dest: /home/ubuntu/acit-3855-microservices/
+        version: main
+        accept_hostkey: yes
+        force: yes
+        update: yes
+
+- name: Setup mircoservice
+  hosts: all
+  vars:
+    PROJECT_DIR: /home/ubuntu/acit-3855-microservices
+  vars_files:
+    - ./vars/vars.yml
+  tasks:
+    - name: Generate .env from template
+      ansible.builtin.template:
+        src: ./templates/.env.j2
+        dest: "{{ PROJECT_DIR }}/.env"
+    - name: setup analyzer config files
+      copy:
+        src: "./../../config/analyzer/{{ item }}"
+        dest: "{{ PROJECT_DIR }}/config/analyzer/{{ item }}"
+      loop:
+        - "app_conf.{{ ENVIRONMENT }}.yml"
+        - "log_conf.{{ ENVIRONMENT }}.yml"
+    - name: setup processing config files
+      copy:
+        src: "./../../config/processing/{{ item }}"
+        dest: "{{ PROJECT_DIR }}/config/processing/{{ item }}"
+      loop:
+        - "app_conf.{{ ENVIRONMENT }}.yml"
+        - "log_conf.{{ ENVIRONMENT }}.yml"
+    - name: setup receiver config files
+      copy:
+        src: "./../../config/receiver/{{ item }}"
+        dest: "{{ PROJECT_DIR }}/config/receiver/{{ item }}"
+      loop:
+        - "app_conf.{{ ENVIRONMENT }}.yml"
+        - "log_conf.{{ ENVIRONMENT }}.yml"
+    - name: setup storage config files
+      copy:
+        src: "./../../config/storage/{{ item }}"
+        dest: "{{ PROJECT_DIR }}/config/storage/{{ item }}"
+      loop:
+        - "app_conf.{{ ENVIRONMENT }}.yml"
+        - "log_conf.{{ ENVIRONMENT }}.yml"
+    - name: create logs dir
+      ansible.builtin.file:
+        path: "{{ PROJECT_DIR }}/logs"
+        state: directory
+        mode: '0777'
+    - name: create kafka data dir
+      ansible.builtin.file:
+        path: "{{ PROJECT_DIR }}/data/kafka"
+        state: directory
+        mode: '0777'
+    - name: create processing data dir
+      ansible.builtin.file:
+        path: "{{ PROJECT_DIR }}/data/processing"
+        state: directory
+        mode: '0777'
+
+- name: Start services
+  hosts: all
+  become: true
+  tasks:
+    - name: Run docker compose up
+      community.docker.docker_compose_v2:
+        project_src: /home/ubuntu/acit-3855-microservices/
+        files:
+        - docker-compose.yml
+    - name: Restart storage service
+      community.docker.docker_compose_v2:
+        project_src: /home/ubuntu/acit-3855-microservices/
+        files:
+          - docker-compose.yml
+        services:
+          - storage
+        state: restarted
