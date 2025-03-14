@@ -1,5 +1,5 @@
 logs/
-data/kafka/*
-data/processing/*
+data/kafka/logs
+data/processing/processing.json
 config/*/*prod.yml
 .env
