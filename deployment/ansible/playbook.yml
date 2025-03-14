@@ -1,0 +1,17 @@
+- name: Deploy microservices
+  hosts: all
+  become: true
+  tasks:
+    # - name: Update repo
+    #   ansible.builtin.git:
+    #     key_file: /home/ubuntu/.ssh/git-key
+    #     repo: 'git@github.com:victortran1449/acit-3855-microservices.git'
+    #     dest: /home/ubuntu/acit-3855-microservices/
+    #     version: main
+    #     accept_hostkey: yes
+    #     update: yes
+    # - name: Start services
+    #   community.docker.docker_compose_v2:
+    #     project_src: /home/ubuntu/acit-3855-microservices/
+    #     files:
+    #     - docker-compose.yml

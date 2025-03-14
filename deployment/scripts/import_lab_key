@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+# set -x  # Uncomment for debugging (optional)
+
+# Function to handle errors
+err() {
+  error_messsage="$@"
+  echo -e "\033[1;31m ERROR:\033[0m ${error_messsage}" >&2
+  exit 1
+}
+
+# define variable to hold public key
+public_key_file=""
+
+# check to see the correct number of arguments have been passed to your script
+if [[ $# -ne 1 ]]; then
+  err "script requires the path to the public key file you would like to import"
+fi
+
+# check to see if the public key file passed as the first positional parameter is a regular file
+# if it is, set the path to the value of the public_key_file variable
+if [[ ! -f $1 ]]; then
+  err "path to public key for import is incorrect, file does not exist"
+else
+  public_key_file="$1"
+fi
+
+# use aws to import the public key into aws account, write info about import to key_data file
+# aws will generate errors, so I am just letting the aws cli handle error messages here
+aws ec2 import-key-pair --key-name "3855-key" --public-key-material fileb://${public_key_file} > key_data
