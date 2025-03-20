@@ -4,6 +4,8 @@ import json
 import yaml
 import logging.config
 import os
+from connexion.middleware import MiddlewarePosition
+from starlette.middleware.cors import CORSMiddleware
 
 # Get environment
 ENVIRONMENT = os.getenv('ENVIRONMENT')
