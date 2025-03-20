@@ -1,4 +1,14 @@
 services:
+  dashboard:
+    build:
+      context: dashboard-ui
+      dockerfile: Dockerfile
+    ports:
+    - "80:80"
+    depends_on:
+    - processing
+    - analyzer
+
   receiver:
     build:
       context: receiver
@@ -11,6 +21,7 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./config/receiver:/app/config
+
   storage:
     build:
       context: storage
@@ -22,6 +33,7 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./config/storage:/app/config
+
   processing:
     build:
       context: processing
@@ -35,6 +47,7 @@ services:
       - ./logs:/app/logs
       - ./config/processing:/app/config
       - ./data/processing:/app/data
+
   analyzer:
     build:
       context: analyzer
@@ -47,10 +60,12 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./config/analyzer:/app/config
+
   zookeeper:
     image: wurstmeister/zookeeper
     volumes:
       - my-zookeeper:/opt/zookeeper-3.4.13/data
+
   kafka:
     image: wurstmeister/kafka
     command: [start-kafka.sh]
@@ -68,6 +83,7 @@ services:
     - ./data/kafka:/kafka
     depends_on:
       - "zookeeper"
+
   db:
     image: mysql
     restart: always
@@ -78,6 +94,7 @@ services:
     volumes:
       - my-db:/var/lib/mysql
       - ./data/database:/docker-entrypoint-initdb.d
+
 volumes:
   my-db:
   my-zookeeper:
