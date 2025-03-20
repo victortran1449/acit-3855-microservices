@@ -1,12 +1,11 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
 
-const VM_URL = "ec2-54-184-212-158.us-west-2.compute.amazonaws.com"
-const PROCESSING_STATS_API_URL = `${VM_URL}:8100/stats`
+const PROCESSING_STATS_API_URL = "http://processing:8100/stats"
 
 const ANALYZER_API_URL = {
-    stats: `${VM_URL}:8110/stats`,
-    chat: `${VM_URL}:8110/stream/chats?index=0`,
-    donation: `${VM_URL}:8110/stream/donations?index=0`
+    stats: "http://analyzer:8110/stats",
+    chat: "http://analyzer:8110/stream/chats?index=0",
+    donation: "http:/analyzer:8110/stream/donations?index=0"
 }
 
 // This function fetches and updates the general statistics
