@@ -1,7 +1,7 @@
 version: 1
 datastore:
-  user: #DB_USER_HERE
-  password: #DB_PW_HERE
+  user: #DB_USER_PLACEHOLDER
+  password: #DB_PW_PLACEHOLDER
   hostname: db
   port: 3306
   db: livestream

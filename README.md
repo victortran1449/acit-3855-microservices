@@ -12,3 +12,10 @@ This repo contains services for acit-3855 microservice
 - storage
 - processing
 - analyzer
+
+#### Deployment Config
+
+- deployment/ansible/ansible.cfg
+- deployment/ansible/inventory/hosts.yml
+- deployment/ansible/vars/vars.yml
+- config/storage/app_conf.dev.yml
