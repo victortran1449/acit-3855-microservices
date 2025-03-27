@@ -1,0 +1,2 @@
+@Library('ci_functions@main') _
+mircroservice_pipeline('storage', 'storage-app')
