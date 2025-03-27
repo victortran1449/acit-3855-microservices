@@ -8,8 +8,6 @@ services:
     depends_on:
     - processing
     - analyzer
-    volumes:
-     -
 
   receiver:
     build:
