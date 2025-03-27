@@ -14,7 +14,7 @@ services:
       context: receiver
       dockerfile: Dockerfile
     ports:
-    - "8080:8080"
+    - "8080"
     env_file: ".env"
     depends_on:
     - kafka
@@ -39,7 +39,7 @@ services:
       context: processing
       dockerfile: Dockerfile
     ports:
-    - "8100:8100"
+    - "8100"
     environment:
       CORS_ALLOW_ALL: no # change to yes to allow all requests
     env_file: ".env"
@@ -55,7 +55,7 @@ services:
       context: analyzer
       dockerfile: Dockerfile
     ports:
-    - "8110:8110"
+    - "8110"
     environment:
       CORS_ALLOW_ALL: no # change to yes to allow all requests
     env_file: ".env"
