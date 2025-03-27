@@ -1,2 +1,2 @@
 @Library('ci_functions@main') _
-mircroservice_pipeline('analyzer', 'analyzer-app')
+mircroservice_pipeline('analyzer')
