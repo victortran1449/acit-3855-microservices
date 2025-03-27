@@ -77,7 +77,7 @@
     - name: Generate updateStats.js from template
       ansible.builtin.template:
         src: ./templates/updateStats.js.j2
-        dest: "{{ PROJECT_DIR }}/dashboard-ui/updateStats.js"
+        dest: "{{ PROJECT_DIR }}/dashboard-ui/dashboard/updateStats.js"
     - name: setup analyzer config files
       copy:
         src: "./../../config/analyzer/{{ item }}"

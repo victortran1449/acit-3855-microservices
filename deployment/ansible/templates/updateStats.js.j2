@@ -1,13 +1,13 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
 
 const VM_URL = "{{ VM_URL }}";
-const PROCESSING_STATS_API_URL = `http://${VM_URL}:8100/stats`;
+const PROCESSING_STATS_API_URL = `http://${VM_URL}/processing/stats`;
 
 const getRandomIndex = () => Math.floor(Math.random() * 10);
 const ANALYZER_API_URL = {
-    stats: `http://${VM_URL}:8110/stats`,
-    chat: `http://${VM_URL}:8110/stream/chats?index=${getRandomIndex()}`,
-    donation: `http://${VM_URL}:8110/stream/donations?index=${getRandomIndex()}`
+    stats: `http://${VM_URL}/analyzer/stats`,
+    chat: `http://${VM_URL}/analyzer/stream/chats?index=${getRandomIndex()}`,
+    donation: `http://${VM_URL}/analyzer/stream/donations?index=${getRandomIndex()}`
 }
 
 // This function fetches and updates the general statistics
