@@ -8,6 +8,8 @@ services:
     depends_on:
     - processing
     - analyzer
+    volumes:
+     -
 
   receiver:
     build:
@@ -40,6 +42,8 @@ services:
       dockerfile: Dockerfile
     ports:
     - "8100:8100"
+    environment:
+      CORS_ALLOW_ALL: no # change to yes to allow all requests
     env_file: ".env"
     depends_on:
     - storage
@@ -54,6 +58,8 @@ services:
       dockerfile: Dockerfile
     ports:
     - "8110:8110"
+    environment:
+      CORS_ALLOW_ALL: no # change to yes to allow all requests
     env_file: ".env"
     depends_on:
     - kafka
