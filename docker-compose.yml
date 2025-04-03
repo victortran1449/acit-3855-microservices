@@ -10,8 +10,7 @@ services:
     - analyzer
 
   receiver:
-    build:
-      image: victortran1449/receiver:receiver-app
+    image: victortran1449/receiver:receiver-app
     ports:
     - "8080:8080"
     env_file: ".env"
@@ -22,8 +21,7 @@ services:
       - ./config/receiver:/app/config
 
   storage:
-    build:
-      image: victortran1449/storage:storage-app
+    image: victortran1449/storage:storage-app
     env_file: ".env"
     depends_on:
     - db
@@ -33,8 +31,7 @@ services:
       - ./config/storage:/app/config
 
   processing:
-    build:
-      image: victortran1449/processing:processing-app
+    image: victortran1449/processing:processing-app
     ports:
     - "8100:8100"
     env_file: ".env"
@@ -46,8 +43,7 @@ services:
       - ./data/processing:/app/data
 
   analyzer:
-    build:
-      image: victortran1449/receiver:receiver-app
+    image: victortran1449/receiver:receiver-app
     ports:
     - "8110:8110"
     env_file: ".env"
