@@ -9,8 +9,6 @@ from sqlalchemy.sql.functions import now
 class Base(DeclarativeBase):
     """ Base """
 
-Base = declarative_base()
-
 class Chat(Base):
     """ Chat """
 
