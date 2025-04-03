@@ -2,20 +2,20 @@
 storage app
 """
 
-import connexion
-from connexion import NoContent
-import pykafka.common
+import os
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
-from models import Base, Chat, Donation
 from datetime import datetime as dt
 import yaml
 import logging.config
 from pykafka import KafkaClient
-import pykafka
 import json
 from threading import Thread
-import os
+from models import Base, Chat, Donation
+import connexion
+from connexion import NoContent
+import pykafka.common
+import pykafka
 
 # Get environment
 ENVIRONMENT = os.getenv('ENVIRONMENT')
@@ -42,12 +42,12 @@ with open(f"config/log_conf.{ENVIRONMENT}.yml", "r", encoding="utf-8") as f:
 logger = logging.getLogger('basicLogger')
 engine = create_engine(f"mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_SCHEMA}")
 def start_session():
+    """ Start db session """
     Base.metadata.bind = engine
     return sessionmaker(bind=engine)()
 
 def process_messages():
     """ Process event messages """
-    
     client = KafkaClient(hosts=f"{KAFKA_HOST}:{KAFKA_PORT}")
     topic = client.topics[str.encode(KAFKA_TOPIC)]
 
@@ -64,7 +64,7 @@ def process_messages():
     for msg in consumer:
         msg_str = msg.value.decode('utf-8')
         msg = json.loads(msg_str)
-        logger.info("Message: %s" % msg)
+        logger.info(f"Message: {msg}")
         payload = msg["payload"]
         if msg["type"] == "chat":
             # Store the event1 (i.e., the payload) to the DB
@@ -78,14 +78,12 @@ def process_messages():
 
 def setup_kafka_thread():
     """ Set up Kafka thread """
-    
-    t1 = Thread(target=process_messages)
-    t1.setDaemon(True)
-    t1.start()
+    thread = Thread(target=process_messages)
+    thread.setDaemon(True)
+    thread.start()
 
 def post_chat(body):
     """ Receives a chat """
-
     session = start_session()
 
     chat = Chat(body['stream_id'],
@@ -103,7 +101,6 @@ def post_chat(body):
 
 def post_donation(body):
     """ Receives a donation """
-
     session = start_session()
 
     donation = Donation(body['stream_id'],

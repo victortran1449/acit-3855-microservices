@@ -31,7 +31,7 @@ with open(f"config/log_conf.{ENVIRONMENT}.yml", "r", encoding="utf-8") as f:
 logger = logging.getLogger('basicLogger')
 
 def post_chat(body):
-    '''Post chat'''
+    """ Post chat """
     trace_id = str(uuid.uuid4())
     logger.info(f"Received event chat with a trace id of {trace_id}")
     body["trace_id"] = trace_id
@@ -50,7 +50,7 @@ def post_chat(body):
     return NoContent, 201
 
 def post_donation(body):
-    '''Post donation'''
+    """ Post donation """
     trace_id = str(uuid.uuid4())
     logger.info(f"Received event donation with a trace id of {trace_id}")
     body["trace_id"] = trace_id
