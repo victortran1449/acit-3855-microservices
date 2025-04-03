@@ -90,7 +90,8 @@ def get_event_stats():
 
     stats = {
         "num_chats": num_chats,
-        "num_donations": num_donations
+        "num_donations": num_donations,
+        "test": "test"
     }
     logger.info(stats)
 
