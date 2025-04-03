@@ -7,6 +7,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy.sql.functions import now
 
 class Base(DeclarativeBase):
+    """ Base """
     pass
 
 

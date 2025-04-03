@@ -93,7 +93,6 @@ def post_chat(body):
                 body['timestamp'],
                 body['trace_id'])
     session.add(chat)
-    
     session.commit()
     session.close()
 
@@ -138,7 +137,9 @@ def get_donations(start_timestamp, end_timestamp):
     session = start_session()
     start = dt.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
     end = dt.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
-    statement = select(Donation).where(Donation.date_created >= start).where(Donation.date_created < end)
+    statement = select(Donation)
+        .where(Donation.date_created >= start)
+        .where(Donation.date_created < end)
     results = [
         result.to_dict()
         for result in session.execute(statement).scalars().all()
