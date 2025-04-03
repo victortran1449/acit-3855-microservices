@@ -67,6 +67,22 @@ services:
       - ./logs:/app/logs
       - ./config/analyzer:/app/config
 
+  consistency_check:
+    build:
+      context: consistency_check
+      dockerfile: Dockerfile
+    ports:
+    - "8120"
+    env_file: ".env"
+    depends_on:
+    - storage
+    - analyzer
+    - processing
+    volumes:
+      - ./logs:/app/logs
+      - ./config/consistency_check:/app/config
+      - ./data/consistency_check:/app/data
+
   zookeeper:
     image: wurstmeister/zookeeper
     volumes:

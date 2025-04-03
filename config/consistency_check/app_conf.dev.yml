@@ -1,0 +1,14 @@
+version: 1
+datastore:
+  filename: data/consistency_check.json
+processing:
+  url: http://processing:8100/processing
+analyzer:
+  url: http://analyzer:8110/analyzer
+storage:
+  url: http://storage:8090/storage
+kafka:
+  events:
+    hostname: kafka
+    port: 9092
+    topic: events

@@ -106,6 +106,13 @@
       loop:
         - "app_conf.{{ ENVIRONMENT }}.yml"
         - "log_conf.{{ ENVIRONMENT }}.yml"
+    - name: setup consistency_check config files
+      copy:
+        src: "./../../config/consistency_check/{{ item }}"
+        dest: "{{ PROJECT_DIR }}/config/consistency_check/{{ item }}"
+      loop:
+        - "app_conf.{{ ENVIRONMENT }}.yml"
+        - "log_conf.{{ ENVIRONMENT }}.yml"
     - name: create logs dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/logs"
@@ -119,6 +126,11 @@
     - name: create processing data dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/data/processing"
+        state: directory
+        mode: '0777'
+    - name: create consistency_check data dir
+      ansible.builtin.file:
+        path: "{{ PROJECT_DIR }}/data/consistency_check"
         state: directory
         mode: '0777'
 
