@@ -43,7 +43,7 @@ services:
       - ./data/processing:/app/data
 
   analyzer:
-    image: victortran1449/receiver:receiver-app
+    image: victortran1449/analyzer:analyzer-app
     ports:
     - "8110:8110"
     env_file: ".env"
