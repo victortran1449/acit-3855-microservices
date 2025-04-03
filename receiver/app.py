@@ -1,12 +1,12 @@
 import logging.config
-import connexion
-from connexion import NoContent
+import os
+from datetime import datetime as dt
+import json
 import uuid
 import yaml
-import json
-from datetime import datetime as dt
+import connexion
+from connexion import NoContent
 from pykafka import KafkaClient
-import os
 
 # Get environment
 ENVIRONMENT = os.getenv('ENVIRONMENT')
@@ -27,6 +27,7 @@ with open(f"config/log_conf.{ENVIRONMENT}.yml", "r") as f:
 logger = logging.getLogger('basicLogger')
 
 def post_chat(body):
+    '''Post chat'''
     trace_id = str(uuid.uuid4())
     logger.info(f"Received event chat with a trace id of {trace_id}")
     body["trace_id"] = trace_id
@@ -45,6 +46,7 @@ def post_chat(body):
     return NoContent, 201
 
 def post_donation(body):
+    '''Post donation'''
     trace_id = str(uuid.uuid4())
     logger.info(f"Received event donation with a trace id of {trace_id}")
     body["trace_id"] = trace_id
