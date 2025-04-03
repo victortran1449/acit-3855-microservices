@@ -1,4 +1,4 @@
-FROM python:3.13.2-slim
+FROM python:3.13
 LABEL maintainer="vtran57@bcit.ca"
 RUN mkdir /app
 COPY ./requirements.txt /app/requirements.txt
