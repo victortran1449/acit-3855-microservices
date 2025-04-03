@@ -12,7 +12,7 @@ from pykafka import KafkaClient
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
 # Config
-with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r') as f:
+with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
 
 KAFKA_HOST = app_config["kafka"]["events"]["hostname"]
@@ -20,7 +20,7 @@ KAFKA_PORT = app_config["kafka"]["events"]["port"]
 KAFKA_TOPIC = app_config["kafka"]["events"]["topic"]
 
 # Logging
-with open(f"config/log_conf.{ENVIRONMENT}.yml", "r") as f:
+with open(f"config/log_conf.{ENVIRONMENT}.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 

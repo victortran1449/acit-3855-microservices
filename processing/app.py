@@ -1,12 +1,11 @@
 import logging.config
-import connexion
-import httpx
-import yaml
-import logging.config
-from apscheduler.schedulers.background import BackgroundScheduler
+import os
 import json
 from datetime import datetime as dt, timezone
-import os
+import yaml
+import httpx
+from apscheduler.schedulers.background import BackgroundScheduler
+import connexion
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
 
@@ -14,12 +13,12 @@ from starlette.middleware.cors import CORSMiddleware
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
 # Logging
-with open(f"config/log_conf.{ENVIRONMENT}.yml", "r") as f:
+with open(f"config/log_conf.{ENVIRONMENT}.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 
 # Config
-with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r') as f:
+with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
 
 DATA_FILE = app_config["datastore"]["filename"]
@@ -27,10 +26,11 @@ DATA_FILE = app_config["datastore"]["filename"]
 logger = logging.getLogger('basicLogger')
 
 def get_stats():
+    """ Get stats from data file """
     logger.info("Request for stats received")
 
     try:
-        with open(DATA_FILE, "r") as fd:
+        with open(DATA_FILE, "r", encoding="utf-8") as fd:
             data = json.load(fd)
             logger.debug(data)
             logger.info("Request for stats completed")
@@ -41,11 +41,13 @@ def get_stats():
     return data, 200
 
 def populate_stats():
+    """ Populate stats to data file """
+
     logger.info("Processing started")
 
     # Load data
     try:
-        with open(DATA_FILE, "r") as fd:
+        with open(DATA_FILE, "r", encoding="utf-8") as fd:
             data = json.load(fd)
     except:
         data = {
@@ -89,6 +91,8 @@ def populate_stats():
     logger.info("Processing ended")
 
 def init_scheduler():
+    """ Init scheduler """
+
     sched = BackgroundScheduler(daemon=True)
     sched.add_job(populate_stats, 'interval', seconds=app_config['scheduler']['interval'])
     sched.start()

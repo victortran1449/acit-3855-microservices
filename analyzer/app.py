@@ -1,9 +1,9 @@
-import connexion
-from pykafka import KafkaClient
+import os
 import json
 import yaml
-import logging.config
-import os
+import connexion
+import logging.config 
+from pykafka import KafkaClient
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
 
@@ -11,25 +11,29 @@ from starlette.middleware.cors import CORSMiddleware
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
 # App Config
-with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r') as f:
+with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
 KAFKA_HOST = app_config["kafka"]["events"]["hostname"]
 KAFKA_PORT = app_config["kafka"]["events"]["port"]
 KAFKA_TOPIC = app_config["kafka"]["events"]["topic"]
 
 # Logging
-with open(f"config/log_conf.{ENVIRONMENT}.yml", "r") as f:
+with open(f"config/log_conf.{ENVIRONMENT}.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 logger = logging.getLogger('basicLogger')
 
 def get_events():
+    """ Get events from Kafka """
+
     client = KafkaClient(hosts=f"{KAFKA_HOST}:{KAFKA_PORT}")
     topic = client.topics[str.encode(KAFKA_TOPIC)]
     consumer = topic.get_simple_consumer(reset_offset_on_start=True, consumer_timeout_ms=1000)
     return consumer
 
 def get_event_index(index, event_type):
+    """ Get event index """
+
     events = get_events()
     counter = 0
     event = None
@@ -44,6 +48,8 @@ def get_event_index(index, event_type):
     return event
 
 def get_chat(index):
+    """ Get chat from Kafka """
+
     logger.info(f"Received get chat request for index: {index}")
     chat = get_event_index(index, "chat")
     if chat:
@@ -53,6 +59,8 @@ def get_chat(index):
         return { "message": f"No chat message at index {index}!"}, 404
 
 def get_donation(index):
+    """ Get donation from Kafka """
+
     logger.info(f"Received get donation request for index: {index}")
     donation = get_event_index(index, "donation")
     if donation:
@@ -62,6 +70,8 @@ def get_donation(index):
         return { "message": f"No donation message at index {index}!"}, 404
 
 def get_event_stats():
+    """ Get event stats from Kafka """
+
     logger.info(f"Received get event stats request")
     events = get_events()
     num_chats = 0

@@ -17,7 +17,7 @@ import os
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
 # Config
-with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r') as f:
+with open(f'config/app_conf.{ENVIRONMENT}.yml', 'r', encoding="utf-8") as f:
     app_config = yaml.safe_load(f.read())
 
 DB_USER = app_config.get("datastore", {}).get("user")
@@ -31,7 +31,7 @@ KAFKA_PORT = app_config["kafka"]["events"]["port"]
 KAFKA_TOPIC = app_config["kafka"]["events"]["topic"]
 
 # Logging
-with open(f"config/log_conf.{ENVIRONMENT}.yml", "r") as f:
+with open(f"config/log_conf.{ENVIRONMENT}.yml", "r", encoding="utf-8") as f:
     LOG_CONFIG = yaml.safe_load(f.read())
     logging.config.dictConfig(LOG_CONFIG)
 
@@ -43,6 +43,7 @@ def start_session():
 
 def process_messages():
     """ Process event messages """
+    
     client = KafkaClient(hosts=f"{KAFKA_HOST}:{KAFKA_PORT}")
     topic = client.topics[str.encode(KAFKA_TOPIC)]
 
@@ -72,6 +73,8 @@ def process_messages():
         consumer.commit_offsets()
 
 def setup_kafka_thread():
+    """ Set up Kafka thread """
+    
     t1 = Thread(target=process_messages)
     t1.setDaemon(True)
     t1.start()
@@ -114,6 +117,8 @@ def post_donation(body):
     logger.debug(f"Stored event donation with a trace id of {body['trace_id']}")
 
 def get_chats(start_timestamp, end_timestamp):
+    """ Get chats from db """
+
     session = start_session()
     start = dt.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
     end = dt.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -127,6 +132,8 @@ def get_chats(start_timestamp, end_timestamp):
     return results
 
 def get_donations(start_timestamp, end_timestamp):
+    """ Get donations from db """
+
     session = start_session()
     start = dt.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
     end = dt.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
