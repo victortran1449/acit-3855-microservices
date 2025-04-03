@@ -4,11 +4,11 @@ storage app
 
 import os
 from datetime import datetime as dt
-from pykafka import KafkaClient
 import logging.config
 import json
 from threading import Thread 
 import yaml
+from pykafka import KafkaClient
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 import connexion
