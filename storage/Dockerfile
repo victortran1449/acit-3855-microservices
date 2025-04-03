@@ -1,9 +1,8 @@
-FROM python:3.13
+FROM python:3
 LABEL maintainer="vtran57@bcit.ca"
 RUN mkdir /app
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
-RUN apt-get update && apt-get install -y pkg-config
 RUN pip3 install setuptools
 RUN pip3 install -r requirements.txt
 COPY . /app
