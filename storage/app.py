@@ -1,7 +1,7 @@
 import connexion
 from connexion import NoContent
 import pykafka.common
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, func
 from sqlalchemy.orm import sessionmaker
 from models import Base, Chat, Donation
 from datetime import datetime as dt
