@@ -1,9 +1,8 @@
-FROM python:3.13.2-alpine3.21
+FROM python:3.13.2-slim
 LABEL maintainer="vtran57@bcit.ca"
 RUN mkdir /app
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
-RUN apk add --no-cache pkgconf mariadb-connector-c-dev
 RUN pip3 install setuptools
 RUN pip3 install -r requirements.txt
 COPY . /app
