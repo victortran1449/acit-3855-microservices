@@ -89,8 +89,8 @@ def populate_stats():
     
     # Update last_updated and write data
     data["last_updated"] = end_timestamp
-    with open(app_config["datastore"]["filename"], "w") as fd:
-        json.dump(data, fd, indent=4)
+    with open(app_config["datastore"]["filename"], "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)
 
     logger.info("Processing ended")
 
