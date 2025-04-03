@@ -43,15 +43,15 @@ components:
     Chat:
       type: object
       required:
-        - stream_id
+        - event_id
         - user_id
         - message
         - reaction_count
         - timestamp
       properties:
-        stream_id:
+        event_id:
           type: string
-          description: The ID of the stream where the chat was sent
+          description: The ID of the event
           format: uuid
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         user_id:
@@ -76,16 +76,16 @@ components:
     Donation:
       type: object
       required:
-        - stream_id
+        - event_id
         - user_id
         - amount
         - currency
         - message
         - timestamp
       properties:
-        stream_id:
+        event_id:
           type: string
-          description: The ID of the stream where the chat was sent
+          description: The ID of the event
           format: uuid
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         user_id:

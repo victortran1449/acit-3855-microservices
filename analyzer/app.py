@@ -82,6 +82,23 @@ def get_event_stats():
 
     return stats
 
+def get_event_ids(event_type):
+    logger.info(f"Received {event_type} event IDs request")
+    event_ids = []
+    events = get_events()
+    for msg in events:
+        message = msg.value.decode("utf-8")
+        data = json.loads(message)
+        if data["type"] == event_type:
+            event_ids.append({"event_id": data["event_id"], "trace_id": data["trace_id"]})
+    return event_ids
+
+def get_chat_event_ids():
+    return get_event_ids("chat")
+
+def get_donation_event_ids():
+    return get_event_ids("donation")
+
 # Define all required functions
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("livestream.yaml", base_path="/analyzer", strict_validation=True, validate_responses=True)

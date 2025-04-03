@@ -81,7 +81,7 @@ def post_chat(body):
 
     session = start_session()
 
-    chat = Chat(body['stream_id'],
+    chat = Chat(body['event_id'],
                 body['user_id'],
                 body['message'],
                 body['reaction_count'],
@@ -99,7 +99,7 @@ def post_donation(body):
 
     session = start_session()
 
-    donation = Donation(body['stream_id'],
+    donation = Donation(body['event_id'],
                 body['user_id'],
                 body['amount'],
                 body['currency'],
@@ -137,6 +137,38 @@ def get_donations(start_timestamp, end_timestamp):
     ]
     session.close()
     logger.info("Found %d donations (start: %s, end: %s)", len(results), start, end)
+    return results
+
+def get_count():
+    logger.info("Received count request")
+    session = start_session()
+    chat_count = session.scalar(select(func.count()).select_from(Chat))
+    donation_count = session.scalar(select(func.count()).select_from(Donation))
+    session.close()
+    count = {"chat_count": chat_count, "donation_count": donation_count}
+    logger.info(count)
+    return count
+
+def get_chat_event_ids():
+    logger.info("Received chat event IDs request")
+    session = start_session()
+    statement = select(Chat)
+    results = [
+        result.to_event_ids()
+        for result in session.execute(statement).scalars().all()
+    ]
+    session.close()
+    return results
+
+def get_donation_event_ids():
+    logger.info("Received donation event IDs request")
+    session = start_session()
+    statement = select(Donation)
+    results = [
+        result.to_event_ids()
+        for result in session.execute(statement).scalars().all()
+    ]
+    session.close()
     return results
 
 app = connexion.FlaskApp(__name__, specification_dir='')

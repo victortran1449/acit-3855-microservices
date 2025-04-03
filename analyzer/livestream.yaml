@@ -75,22 +75,50 @@ paths:
               schema:
                 type: object
                 $ref: "#/components/schemas/Stats"
+  /event_ids/chat:
+    get:
+      summary: Gets IDs for chat events
+      operationId: app.get_chat_event_ids
+      description: Gets event ID and trace ID for each chat event from queue
+      responses:
+        "200":
+          description: Successfully returned chat event IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventIds"
+  /event_ids/donation:
+    get:
+      summary: Gets IDs for donation events
+      operationId: app.get_donation_event_ids
+      description: Gets event ID and trace ID for each donation event from queue
+      responses:
+        "200":
+          description: Successfully returned donation event IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventIds"
 
 components:
   schemas:
     Chat:
       type: object
       required:
-        - stream_id
+        - event_id
         - user_id
         - message
         - reaction_count
         - timestamp
         - trace_id
       properties:
-        stream_id:
+        event_id:
           type: string
-          description: The ID of the stream where the chat was sent
+          description: The ID of the event
           format: uuid
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         user_id:
@@ -120,7 +148,7 @@ components:
     Donation:
       type: object
       required:
-        - stream_id
+        - event_id
         - user_id
         - amount
         - currency
@@ -128,9 +156,9 @@ components:
         - timestamp
         - trace_id
       properties:
-        stream_id:
+        event_id:
           type: string
-          description: The ID of the stream where the chat was sent
+          description: The ID of the event
           format: uuid
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         user_id:
@@ -174,3 +202,17 @@ components:
           type: integer
           example: 30000
       type: object
+    
+    EventIds:
+      type: object
+      required:
+        - event_id
+        - trace_id
+      properties:
+        event_id:
+          type: integer
+          example: 100
+        trace_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851

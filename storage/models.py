@@ -12,7 +12,7 @@ class Chat(Base):
     __tablename__ = "chat"
 
     id = Column(Integer, primary_key=True)
-    stream_id = Column(String(250), nullable=False)
+    event_id = Column(String(250), nullable=False)
     user_id = Column(String(250), nullable=False)
     message = Column(String(1000), nullable=False)
     reaction_count = Column(Integer, nullable=False)
@@ -20,9 +20,9 @@ class Chat(Base):
     date_created = Column(DateTime, nullable=False, default=now)
     trace_id = Column(String(250), nullable=False)
 
-    def __init__(self, stream_id, user_id, message, reaction_count, timestamp, trace_id):
+    def __init__(self, event_id, user_id, message, reaction_count, timestamp, trace_id):
         """ Initializes a chat message """
-        self.stream_id = stream_id
+        self.event_id = event_id
         self.user_id = user_id
         self.message = message
         self.reaction_count = reaction_count
@@ -34,7 +34,7 @@ class Chat(Base):
         """ Dictionary Representation of a chat message """
         return {
             'id': self.id,
-            'stream_id': self.stream_id,
+            'event_id': self.event_id,
             'user_id': self.user_id,
             'message': self.message,
             'reaction_count': self.reaction_count,
@@ -43,13 +43,20 @@ class Chat(Base):
             'date_created': self.date_created
         }
 
+    def to_event_ids(self):
+        """ Dictionary Representation of a chat event IDs """
+        return {
+            'event_id': self.event_id,
+            'trace_id': self.trace_id,
+        }
+
 class Donation(Base):
     """ Donation """
 
     __tablename__ = "donation"
 
     id = Column(Integer, primary_key=True)
-    stream_id = Column(String(250), nullable=False)
+    event_id = Column(String(250), nullable=False)
     user_id = Column(String(250), nullable=False)
     amount = Column(Float, nullable=False)
     currency = Column(String(10), nullable=False)
@@ -58,9 +65,9 @@ class Donation(Base):
     date_created = Column(DateTime, nullable=False, default=now)
     trace_id = Column(String(250), nullable=False)
 
-    def __init__(self, stream_id, user_id, amount, currency, message, timestamp, trace_id):
+    def __init__(self, event_id, user_id, amount, currency, message, timestamp, trace_id):
         """ Initializes a donation """
-        self.stream_id = stream_id
+        self.event_id = event_id
         self.user_id = user_id
         self.amount = amount
         self.currency = currency
@@ -73,7 +80,7 @@ class Donation(Base):
         """ Dictionary Representation of a donation """
         return {
             'id': self.id,
-            'stream_id': self.stream_id,
+            'event_id': self.event_id,
             'user_id': self.user_id,
             'amount': self.amount,
             'currency': self.currency,
@@ -81,4 +88,11 @@ class Donation(Base):
             'timestamp': self.timestamp,
             'trace_id': self.trace_id,
             'date_created': self.date_created
+        }
+
+    def to_event_ids(self):
+        """ Dictionary Representation of a donation event IDs """
+        return {
+            'event_id': self.event_id,
+            'trace_id': self.trace_id,
         }

@@ -12,6 +12,7 @@ This repo contains services for acit-3855 microservice
 - storage
 - processing
 - analyzer
+- consistency_check
 
 #### Deployment Config
 
