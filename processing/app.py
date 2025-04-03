@@ -45,7 +45,7 @@ def get_stats():
 
 def populate_stats():
     """ Populate stats to data file """
-    logger.info("test")
+    logger.info("hi")
     logger.info("Processing started")
 
     # Load data
