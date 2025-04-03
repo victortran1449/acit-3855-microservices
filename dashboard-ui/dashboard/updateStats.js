@@ -2,6 +2,8 @@
 
 const VM_URL = "VM_URL_PLACEHOLDER";
 const PROCESSING_STATS_API_URL = `http://${VM_URL}/processing/stats`;
+const CHECK_API_URL = `http://${VM_URL}/consistency_check/checks`;
+const UPDATE_API_URL = `http://${VM_URL}/consistency_check/update`;
 
 const getRandomIndex = () => Math.floor(Math.random() * 10);
 const ANALYZER_API_URL = {
@@ -33,6 +35,7 @@ const getStats = () => {
     makeReq(ANALYZER_API_URL.stats, (result) => updateCodeDiv(result, "analyzer-stats"))
     makeReq(ANALYZER_API_URL.chat, (result) => updateCodeDiv(result, "event-chat"))
     makeReq(ANALYZER_API_URL.donation, (result) => updateCodeDiv(result, "event-donation"))
+    makeReq(CHECK_API_URL, (result) => updateCodeDiv(result, "check"))
 }
 
 const updateErrorMessages = (message) => {
@@ -55,3 +58,9 @@ const setup = () => {
 }
 
 document.addEventListener('DOMContentLoaded', setup)
+document.getElementById("update").addEventListener("click", () => {
+    fetch(UPDATE_API_URL, { method: "POST" })
+        .then(response => response.json())
+        .then(data => console.log("Update successful:", data))
+        .catch(error => console.error("Error updating:", error));
+});

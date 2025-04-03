@@ -93,7 +93,7 @@ def get_checks():
             logger.debug(data)
     except:
         logger.error("Failed to get latest consistency check, data file does not exist yet")
-        return "No checks available", 404
+        return {"message": "No checks available"}, 404
     return data, 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
