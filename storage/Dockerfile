@@ -3,7 +3,7 @@ LABEL maintainer="vtran57@bcit.ca"
 RUN mkdir /app
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
-RUN apt update && apt install -y pkg-config libmariadb-dev  
+RUN apk add --no-cache pkgconf mariadb-connector-c-dev
 RUN pip3 install setuptools
 RUN pip3 install -r requirements.txt
 COPY . /app
