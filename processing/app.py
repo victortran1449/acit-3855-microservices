@@ -38,7 +38,7 @@ def get_stats():
             data = json.load(file)
             logger.debug(data)
             logger.info("Request for stats completed")
-    except:
+    except (FileNotFoundError, json.JSONDecodeError):
         logger.error("Failed to get statistics, stats data file does not exist yet")
         return "Statistics do not exist", 404
     return data, 200
@@ -52,7 +52,7 @@ def populate_stats():
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as file:
             data = json.load(file)
-    except:
+    except (FileNotFoundError, json.JSONDecodeError):
         data = {
             "num_chats": 0,
             "total_chat_reactions": 0,
