@@ -34,14 +34,13 @@ def get_stats():
     logger.info("Request for stats received")
 
     try:
-        with open(DATA_FILE, "r", encoding="utf-8") as fd:
-            data = json.load(fd)
+        with open(DATA_FILE, "r", encoding="utf-8") as file:
+            data = json.load(file)
             logger.debug(data)
             logger.info("Request for stats completed")
     except:
         logger.error("Failed to get statistics, stats data file does not exist yet")
         return "Statistics do not exist", 404
-    
     return data, 200
 
 def populate_stats():
@@ -51,8 +50,8 @@ def populate_stats():
 
     # Load data
     try:
-        with open(DATA_FILE, "r", encoding="utf-8") as fd:
-            data = json.load(fd)
+        with open(DATA_FILE, "r", encoding="utf-8") as file:
+            data = json.load(file)
     except:
         data = {
             "num_chats": 0,
@@ -68,7 +67,8 @@ def populate_stats():
 
     # Request chat events
     for event in ["chat", "donation"]:
-        response = httpx.get(f"{app_config['eventstores'][event]['url']}?start_timestamp={start_timestamp}&end_timestamp={end_timestamp}")
+        url = f"{app_config['eventstores'][event]['url']}?start_timestamp={start_timestamp}&end_timestamp={end_timestamp}"
+        response = httpx.get(url)
         if response.status_code != 200:
             logger.error(f"Request for {event} events failed: {response.status_code}")
         else:
