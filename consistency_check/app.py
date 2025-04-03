@@ -81,12 +81,20 @@ def run_consistency_checks(body):
         json.dump(data, fd, indent=4)
 
     processing_time_ms = int((time.time() - start_time) * 1000)
-    logger.info(f"Consistency checks completed | processing_time_ms={processing_time_ms} | missing_in_db={len(not_in_db)} | missing_in_queue={len{not_in_queue}}")
+    logger.info(f"Consistency checks completed | processing_time_ms={processing_time_ms} | missing_in_db={len(not_in_db)} | missing_in_queue={len(not_in_queue)}")
 
     return {"processing_time_ms": processing_time_ms}
 
 def get_checks():
-    pass
+    logger.info("Received check request")
+    try:
+        with open(DATA_FILE, "r") as fd:
+            data = json.load(fd)
+            logger.debug(data)
+    except:
+        logger.error("Failed to get latest consistency check, data file does not exist yet")
+        return "No checks available", 404
+    return data, 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("consistency_check.yaml", base_path="/consistency_check", strict_validation=True, validate_responses=True)
