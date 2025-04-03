@@ -1,3 +1,7 @@
+"""
+storage app
+"""
+
 import connexion
 from connexion import NoContent
 import pykafka.common
