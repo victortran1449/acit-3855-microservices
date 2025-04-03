@@ -6,7 +6,7 @@ import uuid
 import httpx
 import yaml
 import json
-from datetime import datetime as dt
+from datetime import datetime as dt, timezone
 import os
 
 # Get environment
