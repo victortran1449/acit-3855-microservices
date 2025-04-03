@@ -6,6 +6,9 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy.sql.functions import now
 
+class Base(DeclarativeBase):
+    """ Base """
+
 Base = declarative_base()
 
 class Chat(Base):

@@ -3,19 +3,18 @@ storage app
 """
 
 import os
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import sessionmaker
 from datetime import datetime as dt
 import yaml
 import logging.config
 from pykafka import KafkaClient
 import json
 from threading import Thread
-from models import Base, Chat, Donation
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import sessionmaker
 import connexion
-from connexion import NoContent
 import pykafka.common
 import pykafka
+from models import Base, Chat, Donation
 
 # Get environment
 ENVIRONMENT = os.getenv('ENVIRONMENT')
