@@ -1,2 +1,2 @@
 @Library('ci_functions@main') _
-mircroservice_pipeline('analyzer')
+microservice_pipeline('analyzer')

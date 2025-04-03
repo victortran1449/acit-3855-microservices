@@ -58,7 +58,7 @@
         key_file: /home/ubuntu/.ssh/git-key
         repo: 'git@github.com:victortran1449/acit-3855-microservices.git'
         dest: /home/ubuntu/acit-3855-microservices/
-        version: main
+        version: acit4850
         accept_hostkey: yes
         force: yes
         update: yes

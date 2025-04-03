@@ -1,2 +1,2 @@
 @Library('ci_functions@main') _
-mircroservice_pipeline('storage')
+microservice_pipeline('storage')
