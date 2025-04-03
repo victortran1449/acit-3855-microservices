@@ -36,7 +36,7 @@ def request(method, url):
         logger.info(f"Request for {url} was successful")
     return event_data
 
-def run_consistency_checks(body):
+def run_consistency_checks():
     start_time = time.time()
     logger.info("Starting consistency checks")
 
