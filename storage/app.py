@@ -92,7 +92,7 @@ class KafkaWrapper:
         if self.client is None:
             return False
         try:
-            topic = self.client.topics[self.topic]
+            topic = self.client.topics[str.encode(self.topic)]
             self.consumer = topic.get_simple_consumer(
                 consumer_group=b'event_group',
                 reset_offset_on_start=False,
@@ -121,7 +121,7 @@ class KafkaWrapper:
                 self.consumer = None
                 self.connect()
 
-kafka_wrapper = KafkaWrapper(f"{KAFKA_HOST}:{KAFKA_PORT}", str.encode(KAFKA_TOPIC))
+kafka_wrapper = KafkaWrapper(f"{KAFKA_HOST}:{KAFKA_PORT}", KAFKA_TOPIC)
 
 def start_session():
     Base.metadata.bind = engine

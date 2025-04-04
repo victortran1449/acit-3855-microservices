@@ -63,7 +63,7 @@ class KafkaWrapper:
             msg = f"Kafka error when making client: {e}"
             logger.warning(msg)
             self.client = None
-            self.consumer = None
+            self.producer = None
             return False
 
     def make_producer(self):
@@ -76,8 +76,8 @@ class KafkaWrapper:
         if self.client is None:
             return False
         try:
-            topic = self.client.topics[self.topic]
-            self.consumer = topic.get_sync_producer()
+            topic = self.client.topics[str.encode(self.topic)]
+            self.producer = topic.get_sync_producer()
             logger.info("Kafka producer created")
         except KafkaException as e:
             msg = f"Make error when making producer: {e}"
@@ -86,7 +86,7 @@ class KafkaWrapper:
             self.producer = None
             return False
 
-kafka_wrapper = KafkaWrapper(f"{KAFKA_HOST}:{KAFKA_PORT}", str.encode(KAFKA_TOPIC))
+kafka_wrapper = KafkaWrapper(f"{KAFKA_HOST}:{KAFKA_PORT}", KAFKA_TOPIC)
 
 def post_chat(body):
     trace_id = str(uuid.uuid4())
