@@ -90,7 +90,7 @@ def get_event_ids(event_type):
         message = msg.value.decode("utf-8")
         data = json.loads(message)
         if data["type"] == event_type:
-            event_ids.append({"event_id": data["event_id"], "trace_id": data["trace_id"]})
+            event_ids.append({"event_id": data["payload"]["event_id"], "trace_id": data["payload"]["trace_id"]})
     return event_ids
 
 def get_chat_event_ids():
