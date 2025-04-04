@@ -36,7 +36,13 @@ with open(f"config/log_conf.{ENVIRONMENT}.yml", "r") as f:
     logging.config.dictConfig(LOG_CONFIG)
 
 logger = logging.getLogger('basicLogger')
-engine = create_engine(f"mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_SCHEMA}")
+engine = create_engine(
+    f"mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_SCHEMA}",
+    pool_size=100,
+    max_overflow=50,
+    pool_recycle=1800,
+    pool_pre_ping=True
+)
 
 class KafkaWrapper:
     """ Kafka wrapper for consumer """
