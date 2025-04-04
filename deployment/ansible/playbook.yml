@@ -143,11 +143,3 @@
         project_src: /home/ubuntu/acit-3855-microservices/
         files:
         - docker-compose.yml
-    - name: Restart storage service
-      community.docker.docker_compose_v2:
-        project_src: /home/ubuntu/acit-3855-microservices/
-        files:
-          - docker-compose.yml
-        services:
-          - storage
-        state: restarted
