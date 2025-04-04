@@ -57,7 +57,7 @@ class KafkaWrapper:
             return True
         try:
             self.client = KafkaClient(hosts=self.hostname)
-            logger.info("Kafka client created!")
+            logger.info("Kafka client created")
             return True
         except KafkaException as e:
             msg = f"Kafka error when making client: {e}"
@@ -78,6 +78,7 @@ class KafkaWrapper:
         try:
             topic = self.client.topics[self.topic]
             self.consumer = topic.get_sync_producer()
+            logger.info("Kafka producer created")
         except KafkaException as e:
             msg = f"Make error when making producer: {e}"
             logger.warning(msg)

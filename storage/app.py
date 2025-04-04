@@ -98,6 +98,7 @@ class KafkaWrapper:
                 reset_offset_on_start=False,
                 auto_offset_reset=OffsetType.LATEST
             )
+            logger.info("Kafka consumer created")
         except KafkaException as e:
             msg = f"Make error when making consumer: {e}"
             logger.warning(msg)
