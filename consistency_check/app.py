@@ -64,6 +64,10 @@ def run_consistency_checks():
     storage_event_ids = storage_chat_event_ids + storage_donation_event_ids
     not_in_db = [event for event in analyzer_event_ids if event not in storage_event_ids]
     not_in_queue = [event for event in storage_event_ids if event not in analyzer_event_ids]
+    logger.info(analyzer_event_ids)
+    logger.info(storage_event_ids)
+    logger.info(not_in_db)
+    logger.info(not_in_queue)
 
     # write data
     last_updated = dt.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
