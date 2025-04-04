@@ -1,6 +1,7 @@
+import os
+import time
+import random
 import connexion
-from connexion import NoContent
-import pykafka.common
 from sqlalchemy import create_engine, select, func
 from sqlalchemy.orm import sessionmaker
 from models import Base, Chat, Donation
@@ -8,10 +9,10 @@ from datetime import datetime as dt
 import yaml
 import logging.config
 from pykafka import KafkaClient
-import pykafka
+from pykafka.exceptions import KafkaException
+from pykafka.common import OffsetType
 import json
 from threading import Thread
-import os
 
 # Get environment
 ENVIRONMENT = os.getenv('ENVIRONMENT')

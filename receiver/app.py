@@ -3,9 +3,12 @@ import connexion
 from connexion import NoContent
 import uuid
 import yaml
+import time
+import random
 import json
 from datetime import datetime as dt
 from pykafka import KafkaClient
+from pykafka.exceptions import KafkaException
 import os
 
 # Get environment
