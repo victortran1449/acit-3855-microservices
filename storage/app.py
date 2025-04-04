@@ -37,26 +37,92 @@ with open(f"config/log_conf.{ENVIRONMENT}.yml", "r") as f:
 
 logger = logging.getLogger('basicLogger')
 engine = create_engine(f"mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_SCHEMA}")
+
+class KafkaWrapper:
+    """ Kafka wrapper for consumer """
+    def __init__(self, hostname, topic):
+        self.hostname = hostname
+        self.topic = topic
+        self.client = None
+        self.consumer = None
+        self.connect()
+
+    def connect(self):
+        """Infinite loop: will keep trying"""
+        while True:
+            logger.debug("Trying to connect to Kafka...")
+            if self.make_client():
+                if self.make_consumer():
+                    break
+            # Sleeps for a random amount of time (0.5 to 1.5s)
+            time.sleep(random.randint(500, 1500) / 1000)
+
+    def make_client(self):
+        """
+        Runs once, makes a client and sets it on the instance.
+        Returns: True (success), False (failure)
+        """
+        if self.client is not None:
+            return True
+        try:
+            self.client = KafkaClient(hosts=self.hostname)
+            logger.info("Kafka client created!")
+            return True
+        except KafkaException as e:
+            msg = f"Kafka error when making client: {e}"
+            logger.warning(msg)
+            self.client = None
+            self.consumer = None
+            return False
+
+    def make_consumer(self):
+        """
+        Runs once, makes a consumer and sets it on the instance.
+        Returns: True (success), False (failure)
+        """
+        if self.consumer is not None:
+            return True
+        if self.client is None:
+            return False
+        try:
+            topic = self.client.topics[self.topic]
+            self.consumer = topic.get_simple_consumer(
+                consumer_group=b'event_group',
+                reset_offset_on_start=False,
+                auto_offset_reset=OffsetType.LATEST
+            )
+        except KafkaException as e:
+            msg = f"Make error when making consumer: {e}"
+            logger.warning(msg)
+            self.client = None
+            self.consumer = None
+            return False
+
+    def messages(self):
+        """Generator method that catches exceptions in the consumer loop"""
+        if self.consumer is None:
+            self.connect()
+        while True:
+            try:
+                for msg in self.consumer:
+                    yield msg
+            except KafkaException as e:
+                msg = f"Kafka issue in consumer: {e}"
+                logger.warning(msg)
+                self.client = None
+                self.consumer = None
+                self.connect()
+
+kafka_wrapper = KafkaWrapper(f"{KAFKA_HOST}:{KAFKA_PORT}", str.encode(KAFKA_TOPIC))
+
 def start_session():
     Base.metadata.bind = engine
     return sessionmaker(bind=engine)()
 
 def process_messages():
     """ Process event messages """
-    client = KafkaClient(hosts=f"{KAFKA_HOST}:{KAFKA_PORT}")
-    topic = client.topics[str.encode(KAFKA_TOPIC)]
-
-    # Create a consume on a consumer group, that only reads new messages
-    # (uncommitted messages) when the service re-starts (i.e., it doesn't
-    # read all the old messages from the history in the message queue).
-    consumer = topic.get_simple_consumer(
-        consumer_group=b'event_group',
-        reset_offset_on_start=False,
-        auto_offset_reset=pykafka.common.OffsetType.LATEST
-    )
-
     # This is blocking - it will wait for a new message
-    for msg in consumer:
+    for msg in kafka_wrapper.messages():
         msg_str = msg.value.decode('utf-8')
         msg = json.loads(msg_str)
         logger.info("Message: %s" % msg)
@@ -69,7 +135,8 @@ def process_messages():
             post_donation(payload)
 
         # Commit the new message as being read
-        consumer.commit_offsets()
+        if kafka_wrapper.consumer is not None:
+            kafka_wrapper.consumer.commit_offsets()
 
 def setup_kafka_thread():
     t1 = Thread(target=process_messages)
