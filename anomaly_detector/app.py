@@ -153,7 +153,7 @@ def update_anomalies():
 
     return {"anomalies_count": anomalies_count}, 201
 
-def get_anomalies(event_type):
+def get_anomalies(event_type=None):
     logger.debug("Anomalies request recieved")
     
     if event_type is not None and event_type not in ["chat", "donation"]:
