@@ -87,6 +87,20 @@ services:
       - ./config/consistency_check:/app/config
       - ./data/consistency_check:/app/data
 
+  anomaly_detector:
+    build:
+      context: anomaly_detector
+      dockerfile: Dockerfile
+    ports:
+    - "8130"
+    env_file: ".env"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./config/anomaly_detector:/app/config
+
   zookeeper:
     image: wurstmeister/zookeeper
     volumes:

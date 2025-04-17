@@ -113,6 +113,13 @@
       loop:
         - "app_conf.{{ ENVIRONMENT }}.yml"
         - "log_conf.{{ ENVIRONMENT }}.yml"
+    - name: setup anomaly_detector config files
+      copy:
+        src: "./../../config/anomaly_detector/{{ item }}"
+        dest: "{{ PROJECT_DIR }}/config/anomaly_detector/{{ item }}"
+      loop:
+        - "app_conf.{{ ENVIRONMENT }}.yml"
+        - "log_conf.{
     - name: create logs dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/logs"
@@ -131,6 +138,11 @@
     - name: create consistency_check data dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/data/consistency_check"
+        state: directory
+        mode: '0777'
+    - name: create anomaly_detector data dir
+      ansible.builtin.file:
+        path: "{{ PROJECT_DIR }}/data/anomaly_detector"
         state: directory
         mode: '0777'
 

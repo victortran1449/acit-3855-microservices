@@ -1,0 +1,8 @@
+version: 1
+datastore:
+  filename: data/anomaly_detector.json
+kafka:
+  events:
+    hostname: kafka
+    port: 9092
+    topic: events
