@@ -5,11 +5,11 @@
     - name: install dependencies
       apt:
         pkg:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - gnupg-agent
-        - software-properties-common
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
         state: present
         update_cache: yes
     - name: add GPG key
@@ -52,11 +52,11 @@
         dest: "/home/ubuntu/.ssh/git-key"
         owner: ubuntu
         group: ubuntu
-        mode: '0600'
+        mode: "0600"
     - name: Pull repo
       ansible.builtin.git:
         key_file: /home/ubuntu/.ssh/git-key
-        repo: 'git@github.com:victortran1449/acit-3855-microservices.git'
+        repo: "git@github.com:victortran1449/acit-3855-microservices.git"
         dest: /home/ubuntu/acit-3855-microservices/
         version: main
         accept_hostkey: yes
@@ -119,32 +119,32 @@
         dest: "{{ PROJECT_DIR }}/config/anomaly_detector/{{ item }}"
       loop:
         - "app_conf.{{ ENVIRONMENT }}.yml"
-        - "log_conf.{
+        - "log_conf.{{ ENVIRONMENT }}.yml"
     - name: create logs dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/logs"
         state: directory
-        mode: '0777'
+        mode: "0777"
     - name: create kafka data dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/data/kafka"
         state: directory
-        mode: '0777'
+        mode: "0777"
     - name: create processing data dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/data/processing"
         state: directory
-        mode: '0777'
+        mode: "0777"
     - name: create consistency_check data dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/data/consistency_check"
         state: directory
-        mode: '0777'
+        mode: "0777"
     - name: create anomaly_detector data dir
       ansible.builtin.file:
         path: "{{ PROJECT_DIR }}/data/anomaly_detector"
         state: directory
-        mode: '0777'
+        mode: "0777"
 
 - name: Start services
   hosts: all
@@ -154,4 +154,4 @@
       community.docker.docker_compose_v2:
         project_src: /home/ubuntu/acit-3855-microservices/
         files:
-        - docker-compose.yml
+          - docker-compose.yml
